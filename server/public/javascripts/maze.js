@@ -11,11 +11,11 @@ $(document).ready(function() {
 	// Handle data coming back from the server
 	socket.on('maze', function(result) {
 		//sendUDPCommand("openSocket", "recieved");
-		console.log(result);
+		//console.log(result);
 		showMazeImage(result);
 
 		const page1 = document.getElementById('profile');
-        const page2 = document.getElementById('maze');
+    const page2 = document.getElementById('maze');
 
         
 		page1.classList.remove('active-page');
@@ -27,7 +27,9 @@ $(document).ready(function() {
 		showPath(result);
 	
 	});
-
+  socket.on('actual_path', function(result) {
+		showActualPath(result);
+	});
 
     $('#stop').click(function(){
 		sendUDPCommand("singleUserCommand", "stop");
@@ -66,6 +68,36 @@ $(document).ready(function() {
 			
 
 });
+
+function showActualPath(path) {
+   
+    const firstValue = path[0];
+    const secondValue = path[1];
+    const rowClass = `row${firstValue}`;
+    const colClass = `col${secondValue}`;
+
+    // Get the element with the specified row and column class
+    const element = document.querySelector(`.${rowClass} .${colClass}`);
+
+    // Create a canvas element
+    const canvas = document.createElement("canvas");
+    canvas.width = 30;
+    canvas.height = 30;
+
+    // Get the 2D drawing context
+    const context = canvas.getContext("2d");
+
+    // Draw a red square on the canvas
+    context.fillStyle = "blue";
+    context.fillRect(0, 0, 30, 30);
+
+    // Convert the canvas to a data URL
+    const dataURL = canvas.toDataURL("image/png");
+
+    // Set the src attribute of the image element to the data URL
+    element.src = dataURL;
+
+}
 
 function showPath(pathArray) {
 

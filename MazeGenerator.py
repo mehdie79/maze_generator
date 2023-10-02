@@ -224,3 +224,9 @@ class MazeGenerator():
     def print_maze_console(self):
         for row in self.maze:
             print(" ".join(row))
+
+
+
+
+
+

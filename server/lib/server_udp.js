@@ -10,6 +10,8 @@ var client = dgram.createSocket('udp4');
 var message_maze = false;
 var message_path = false;
 
+var actual_message_path = false;
+
 var server_socket;
 
 
@@ -31,9 +33,15 @@ module.exports = function (io) {
 		if (message == "maze_message") {
 			message_maze = true;
 			message_path = false;
+			actual_message_path = false;
 		} else if(message == "path_message") {
 			message_path = true;
 			message_maze = false;
+			actual_message_path = false;
+		} else if(message == "actual_path_message") {
+			message_path = false;
+			message_maze = false;
+			actual_message_path = true;
 		}
 		else if(message_maze) {
 			const twoDArray = JSON.parse(message.toString());
@@ -44,6 +52,10 @@ module.exports = function (io) {
 			const path = JSON.parse(message.toString());
 			server_socket.emit("path", path);
 			message_path = false;
+		} else if(actual_message_path) {
+			const path = JSON.parse(message.toString());
+			server_socket.emit("actual_path", path);
+			actual_message_path = false;
 		}
 
 		
@@ -60,6 +72,9 @@ module.exports = function (io) {
     pythonProcess.stderr.on('data', (data) => {
       console.error(`Python stderr: ${data}`);
     });
+	pythonProcess.stdout.on('data', (data) => {
+  		console.log(`Python stdout: ${data}`);
+	});
 
     pythonProcess.on('close', (code) => {
       console.log(`Python process exited with code ${code}`);

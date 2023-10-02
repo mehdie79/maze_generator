@@ -1,5 +1,5 @@
 # Ignore the pycatch folder and its contents
 __pycache__/
 
-# Ignore the dist folder and its contents
+# Ignore the node_modules folder and its contents
 node_modules/

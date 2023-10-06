@@ -248,7 +248,7 @@ function showMazeImage(twoDArray) {
     mazeContainer.style.marginTop = '20%';
   }
 
-  if(width_maze > 22 && height_maze > 22) {
+  if(width_maze > 22 || height_maze > 22) {
      mazeContainer.style.marginTop = '8%';
      mazeContainer.style.marginLeft = '18%';
 	   mazeContainer.classList.remove('maze-container');

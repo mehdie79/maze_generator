@@ -91,7 +91,17 @@ class PathFinder:
 
         return my_path
 
+    def populate_unvisited_list(self, map_variable, priority_queue):
         
+        for i in range(len(map_variable)):
+            for j in range(len(map_variable[0])):
+                if i==0 and j==0:
+                    break
+                priority_queue.put((map_variable[i][j].distanceTo, map_variable[i][j], []))
+        return priority_queue
+                
+
+
     def find_dijkstra_search(self, maze):
         map_pbj = Map.Map(maze)
         start_position = map_pbj.start_position
@@ -101,22 +111,32 @@ class PathFinder:
         end_row_index, end_column_index = map_pbj.end_position
         map_variable[row_index][column_index].distanceTo = 0
         priority_queue.put((map_variable[row_index][column_index].distanceTo, map_variable[row_index][column_index], [start_position]))
+        priority_queue = self.populate_unvisited_list(map_variable, priority_queue)
 
-        while priority_queue.not_empty:
+        while priority_queue.qsize() != 0:
+            while priority_queue.qsize() != 0:
+                priority, node, current_path = priority_queue.get()
+                if map_variable[node.row][node.column].isVisited == True:
+                    continue
+                else:
+                    priority_queue.put((priority, node, current_path))
+                    break
+            
+            if priority_queue.qsize() == 0:
+                break
             priority, node, current_path = priority_queue.get()
-            node.isVisited = True
+            map_variable[node.row][node.column].isVisited = True
             self.network.send_message("path_message")
             self.network.send_maze_map(current_path)
             
-            if node == map_variable[end_row_index][end_column_index]:
-                break
             for i in range(len(node.neighbors)):
                 path = current_path
-                if node.neighbors[i].isVisited == True:
+                if map_variable[node.neighbors[i].row][node.neighbors[i].column].isVisited == True:
                     continue
                 first_node = node.neighbors[i].distanceTo
                 second_node = (node.distanceTo+ node.weight[i])
                 if first_node > second_node:
+                    #path = current_path + [(node.neighbors[i].row, node.neighbors[i].column)]
                     path.append((node.neighbors[i].row, node.neighbors[i].column))
                     node.neighbors[i].parent = node
                     node.neighbors[i].distanceTo=node.distanceTo+ node.weight[i] 
@@ -167,33 +187,41 @@ class PathFinder:
                     priority_queue.put((priority, node, current_path))
                     break
             
-            if priority_queue.qsize == 0:
+            if priority_queue.qsize() == 0:
                 break
 
             priority, node, current_path = priority_queue.get()
             map_variable[node.row][node.column].isVisited = True
             self.network.send_message("path_message")
             self.network.send_maze_map(current_path)
+           
             
             for i in range(len(node.neighbors)):
                 path = current_path   
                 if map_variable[node.neighbors[i].row][node.neighbors[i].column].isVisited == True:
                     continue
                 first_node = node.neighbors[i].distanceTo # Neighbour Local goal
-                second_node = (node.distanceTo+ self.distance(node.row, node.column,node.neighbors[i].row, node.neighbors[i].column))
-                if first_node > second_node:
+                second_node = (node.distanceTo + node.weight[i] + self.distance(node.row, node.column,node.neighbors[i].row, node.neighbors[i].column))
+                if first_node > float(second_node):
+                    #path = current_path + [(node.neighbors[i].row, node.neighbors[i].column)]
                     path.append((node.neighbors[i].row, node.neighbors[i].column))
                     node.neighbors[i].parent = node
-                    node.neighbors[i].distanceTo= (node.distanceTo+ self.distance(node.row, node.column,node.neighbors[i].row, node.neighbors[i].column))
+                    node.neighbors[i].distanceTo= (node.distanceTo +self.distance(node.row, node.column,node.neighbors[i].row, node.neighbors[i].column) +  node.weight[i])
                     node.neighbors[i].global_goal = node.neighbors[i].distanceTo + self.heuristic(node.neighbors[i],  map_variable[end_row_index][end_column_index])
+                else:
+                    if node.neighbors[i].global_goal == None:
+                        node.neighbors[i].global_goal = float('inf')
+
+
                 
                 priority_queue.put((node.neighbors[i].global_goal, node.neighbors[i], path))
+
 
             
         path = []
         current_path = map_variable[end_row_index][end_column_index]
 
-        while current_path != map_variable[row_index][column_index]:
+        while current_path != map_variable[row_index][column_index]: 
             path.insert(0, (current_path.row, current_path.column))
             current_path = current_path.parent
         

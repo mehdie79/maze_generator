@@ -1,82 +1,60 @@
-"use strict";
-// After creating package.json, install modules:
-//   $ npm install
-//
-// Launch server with:
-//   $ node main_server.js
-var PORT_NUMBER = 8088;
+'use strict';
 
-var http = require('http');
-var fs   = require('fs');
-var path = require('path');
-var mime = require('mime');
-var socketIo = require('socket.io'); // Import the socket.io module
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const fs = require('fs');
+const path = require('path');
+const mime = require('mime');
 
-/* 
- * Create the static web server
- */
-var server = http.createServer(function(request, response) {
-  var filePath = false;
-  
-  if (request.url == '/') {
-    filePath = 'public/index.html';
-  } else {
-    filePath = 'public' + request.url;
-  }
-  
-  var absPath = './' + filePath;
+const PORT_NUMBER = 8088;
 
-  serveStatic(response, absPath);
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Endpoint to reload the server
+app.post('/reload-server', (req, res) => {
+  console.log('Reloading server...');
+  // Perform any necessary cleanup or tasks before restarting the server
+  // For example, stop any running processes or connections
+
+  // Restart the server
+  restartServer(() => {
+    console.log('Server restarted successfully.');
+    res.status(200).send('Server reload initiated.');
+  });
 });
 
-server.listen(PORT_NUMBER, function() {
-  console.log("Backend debug - server listening on port " + PORT_NUMBER);
+// Endpoint to reload static content
+app.post('/reload-static', (req, res) => {
+  console.log('Reloading static content...');
+  // Perform any necessary tasks for reloading static content
+
+  // Respond with success
+  res.status(200).send('Static content reload initiated.');
 });
 
-function serveStatic(response, absPath) {
-  fs.exists(absPath, function(exists) {
-    if (exists) {
-      fs.readFile(absPath, function(err, data) {
-        if (err) {
-          send404(response);
-        } else {
-          sendFile(response, absPath, data);
-        }
-      });
-    } else {
-      send404(response);
+// Start the server
+http.listen(PORT_NUMBER, () => {
+  console.log(`Server listening on port ${PORT_NUMBER}`);
+  startServer(); // Start the WebSocket and UDP servers when Express server starts
+});
+
+// Your WebSocket and other server setup here...
+
+// Function to restart the server 
+function restartServer(callback) {
+  // Restart the server by executing the batch script
+  
+  // Callback to indicate completion
+    if (typeof callback === 'function') {
+      callback();
     }
-  });
 }
 
-function send404(response) {
-	
-  response.writeHead(404, {'Content-Type': 'text/plain'});
-  response.write('Error 404: resource not found.');
-  response.end();
+// Function to start the WebSocket and UDP servers
+function startServer() {
+  // Code to initialize and start your server, including WebSocket and other dependencies
+  var webServer = require('./lib/server_udp')(io); // Pass the WebSocket server instance to the UDP server
 }
-
-function sendFile(response, filePath, fileContents) {
-  var contentType = mime.getType(path.basename(filePath));
-
-  response.writeHead(200, {
-    "Content-Type": contentType || "application/octet-stream"
-  });
-  response.end(fileContents);
-}
-
-
-/*
- * Create the Web server to listen for the WebSocket
- */
-var io = new socketIo.Server(server, {
-  // Set log level here (0 for debug, 1 for info, 2 for warning, 3 for error)
-  logger: {
-    level: 1,
-  },
-});
-
-var webServer = require('./lib/server_udp')(io); // Pass the WebSocket server instance to UDP server
-
-
-

@@ -50,6 +50,10 @@
                     <option value="dijkstra-algorithm">Dijkstra Algorithm</option>
                     <option value="a-star-algorithm">A* Algorithm</option>
                 </select>
+
+                <label for="interact">Interact with Maze </label>
+                <input type="checkbox" id="interact" name="interact">
+                
                 
                 <input type="submit" value="Submit">
                 
@@ -69,9 +73,37 @@
 
         </section>
         
-        <section id="maze" class="page">
+        <section id="maze" class="page">     
+                
             
         </section>
+        
+
+        <section id="maze_sec" class="page"> 
+            <div class="button-container">
+                
+                <button class="button-return" id="return-button">Return to Menu</button> 
+                <button class="button" id="generate-button">Generate Path</button>
+                <button class="button" id="reset-button">Reset Maze</button>
+                <button class="button" id="Add-Punishment">Add Punishment</button>
+                
+            </div>    
+        </section>
+
+        <section id="maze_not_customize" class="page"> 
+            <div class="button-container">
+                
+                <button class="button-return" id="return-button1">Return to Menu</button> 
+                
+            </div>    
+        </section>
+
+        
+
+
+
+        
+            
 
         <script src='/socket.io/socket.io.js' type='text/javascript'></script>
 	    <script src='http://code.jquery.com\jquery-1.11.1.min.js' type='text/javascript'></script>

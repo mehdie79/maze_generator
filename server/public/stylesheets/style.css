@@ -75,9 +75,6 @@ label, input {
     top: 64%;
     left: 49%;
     transform: translate(-50%, -50%);
-   
-    /* margin-left: 500px;
-    margin-top: 300px; */
     
 
     z-index: 1;
@@ -86,7 +83,6 @@ label, input {
 .container-form form {
     display: flex;
     flex-direction: column;
-    
 }
 
 label {
@@ -95,6 +91,12 @@ label {
     color: #fff;
     /* White text color */
 }
+ input[type="checkbox"] {
+     /* margin-top: 10px; */
+     margin-top: -20px;
+     margin-bottom: 10px;
+     margin-left: 35px;
+ }
 
 input[type="text"],
 select {
@@ -157,13 +159,147 @@ input[type="submit"]:hover {
     display: none;
     
  }
+#maze {
+    margin-top: 10%;
+}
 
 .maze-container {
     position: absolute;
-    top: 55%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    
 }
 
 
 
+ .button-container {
+     display: flex;
+     align-items: center;
+     padding: 10px;
+     
+
+ }
+ /* Style for the active button state */
+ .button.active-button {
+    background-color: #ff5733;
+     /* A different color for the active state */
+     /* Add any other styles to make it visually distinct when active */
+ }
+ .button.active-button:hover {
+    background-color: #e64721;
+     /* A different color for the active state */
+     /* Add any other styles to make it visually distinct when active */
+ }
+
+ /* Style for individual buttons */
+ .button {
+     padding: 20px 20px;
+     background-color: #4CAF50;
+     /* Green color */
+     color: #FFFFFF;
+     border: none;
+     cursor: pointer;
+     border-radius: 15px;
+     /* Rounded corners */
+     font-size: 18px;
+     /* Adjust font size */
+     transition: background-color 0.3s ease;
+     margin-left: 30px;
+     margin-right: 10%;
+     margin-top: 80px;
+     
+     /* Smooth color transition */
+ }
+ .button-return {
+     padding: 20px 20px;
+     background-color: #4CAF50;
+     /* Green color */
+     color: #FFFFFF;
+     border: none;
+     cursor: pointer;
+     border-radius: 15px;
+     /* Rounded corners */
+     font-size: 18px;
+     /* Adjust font size */
+     transition: background-color 0.3s ease;
+     margin-left: 110px;
+     margin-right: 10%;
+     margin-top: 80px;
+
+     /* Smooth color transition */
+ }
+
+ .button-return:hover {
+    background-color: #45a049;
+    /* Darker green on hover */
+}
+
+ /* Hover effect */
+ .button:hover {
+     background-color: #45a049;
+     /* Darker green on hover */
+ }
+
+ 
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    /* Adjust this value for the desired vertical spacing from the top */
+    margin-bottom: 30px;
+    /* Adjust this value for the desired vertical spacing from the maze */
+}
+
+.image_section {
+    color: black;
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: column;
+    
+    margin-top: 10px;
+    /* Adjust this value for the desired vertical spacing between image and text */
+}
+
+.text {
+    margin-left: 90%;
+}
+
+.Floor,
+.Wall,
+.punishment {
+    
+    margin-left: 90%;
+    margin-top: 60px;
+    /* Adjust this value for the desired horizontal spacing between the items */
+}
+
+.yellow-square::before {
+    content: '';
+    width: 30px;
+    height: 30px;
+    background-color: yellow;
+    display: inline-block;
+    margin-bottom: -4px;
+    margin-left: -4.5px;
+    margin-right: -4.5px;
+   
+}
+
+.orange-square::before {
+    content: '';
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    display: inline-block;
+    margin-bottom: -4px;
+    margin-left: -4.5px;
+    margin-right: -4.5px;
+    
+}
+img.hidden {
+    visibility: hidden;
+    display: none;
+}

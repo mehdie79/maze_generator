@@ -9,8 +9,32 @@ class MazeGenerator():
         self.maze = [["u" for _ in range(width)] for _ in range(height)]
         self.walls = []
 
-    
-    
+    def set_wall_punishment(self, row, column, addPunishment):
+        if addPunishment:
+            self.maze[row][column] = "P"
+        else:
+            if self.maze[row][column] == "#":
+                return self.maze
+            self.maze[row][column] = "#"
+
+        return self.maze
+
+    def restart_maze(self):
+        self.generate_customize_maze()
+        return self.maze
+
+    def generate_customize_maze(self):
+        for i in range(self.height):
+            for j in range(self.width):
+                if i==0 or j==0 or i== self.height-1:
+                    self.maze[i][j] = "#"
+                    continue
+                self.maze[i][j] = " "
+        
+        self.maze[0][1] = "O"
+        self.maze[self.height-1][self.width-2] = "X"
+        return self.maze
+
     def surroundingCells(self, rand_wall):
         s_cells = 0
         if (self.maze[rand_wall[0]-1][rand_wall[1]] == " "):
@@ -33,7 +57,7 @@ class MazeGenerator():
             for j in range(0, self.width):
                 if (self.maze[i][j] == 'u'):
                     self.maze[i][j] = "#"
-        
+         
 
     def create_entrance_exit(self):
         for i in range(0, self.width):
@@ -47,8 +71,6 @@ class MazeGenerator():
 
     def generate_maze(self):
 
-        
-        
         starting_height = int(random.random()*self.height)
         starting_width = int(random.random()*self.width)
 
